@@ -1,42 +1,29 @@
-import time
-
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from app.agents.router_agent import RouterAgent
 from app.models.schemas import QueryRequest, QueryResponse
 from app.services.llm_service import call_big_llm, call_small_llm
-from app.utils.metrics import (
-    REQUEST_COUNT,
-    SMALL_LLM_CALLS,
-    BIG_LLM_CALLS,
-    ROUTING_STRATEGY_COUNT,
-    REQUEST_LATENCY,
-)
+from app.core.security import verify_api_key, validate_query_input
 
 router = APIRouter()
+
 router_agent = RouterAgent()
 
 
-@router.post("/route", response_model=QueryResponse)
+@router.post(
+    "/route",
+    response_model=QueryResponse,
+    dependencies=[Depends(verify_api_key)]
+)
 def route_query(request: QueryRequest):
-    start_time = time.time()
-
-    REQUEST_COUNT.inc()
+    validate_query_input(request.query)
 
     decision = router_agent.analyze_query(request.query)
 
-    ROUTING_STRATEGY_COUNT.labels(
-        strategy=decision["routing_strategy"]
-    ).inc()
-
     if decision["selected_model"] == "small_llm":
-        SMALL_LLM_CALLS.inc()
         response = call_small_llm(request.query)
     else:
-        BIG_LLM_CALLS.inc()
         response = call_big_llm(request.query)
-
-    REQUEST_LATENCY.observe(time.time() - start_time)
 
     return QueryResponse(
         query=request.query,
