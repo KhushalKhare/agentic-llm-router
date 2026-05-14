@@ -15,6 +15,8 @@ Production-oriented hybrid LLM routing system built with FastAPI and Groq.
 ## Architecture
 
 User Query → Router Agent → Complexity/Risk Analysis → LLM Selection → Response
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/192f6ce1-c787-43ff-91d1-bfe8c2e2eb4b" />
+
 
 ## Models
 
