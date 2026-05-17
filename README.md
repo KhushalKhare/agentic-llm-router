@@ -1,114 +1,125 @@
 # Agentic LLM Router
 
-Production-oriented hybrid LLM routing system built with **FastAPI**, **Groq**, and **Prometheus**.
+An intelligent hybrid LLM routing system that dynamically selects the most suitable language model for a query based on complexity, ambiguity, risk, and classifier confidence.
 
-The system dynamically routes user queries between a small and large LLM based on complexity, risk level, ambiguity, and routing confidence. The goal is to reduce unnecessary large-model usage while preserving response quality for complex or sensitive tasks.
+Instead of sending every request to a large expensive model, the router optimizes for:
+- lower inference cost
+- reduced latency
+- safer AI interactions
+- scalable production-oriented routing
 
-## Features
+---
 
-- Hybrid LLM routing architecture
-- Rule-based complexity scoring
-- Risk-aware query escalation
-- Ambiguity detection
-- LLM judge fallback
-- Dynamic model selection
-- Prometheus monitoring
-- Routing result evaluation
-- Production-ready FastAPI backend
+# Architecture
 
-## Architecture
+The system uses an ML-based routing pipeline:
 
-```text
 User Query
     ↓
-FastAPI Endpoint
+Sentence Embedding Model
     ↓
-Router Agent
+ML Classifier Prediction
     ↓
-Complexity + Risk + Ambiguity Analysis
+Confidence Evaluation
     ↓
-Routing Decision Engine
-    ↓
-Small LLM or Large LLM
-    ↓
-Final Response
-```
-<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/07333e5e-d00f-4409-a594-5ae368114ebf" />
+├── High Confidence → Route Directly
+└── Low Confidence → LLM Judge Fallback
+                                ↓
+                     Final Model Selection
 
+The router selects:
+- Small LLM → simple / low-risk queries
+- Large LLM → complex / high-risk reasoning tasks
+- LLM Judge → fallback for uncertain routing decisions
 
-## Models
+---
 
-| Model Type | Model |
-| ---------- | ------------------------- |
-| Small LLM | `llama-3.1-8b-instant` |
-| Large LLM | `llama-3.3-70b-versatile` |
+# Key Features
 
-## Tech Stack
+## ML-Based Routing
+- Replaced earlier rule-based routing with embedding + classifier-based prediction
+- Uses Sentence Transformers embeddings
+- Trained classifier predicts optimal model selection
+- Confidence-aware routing decisions
+
+## Hybrid Routing Logic
+- High-confidence predictions are routed directly
+- Low-confidence predictions trigger LLM judge validation
+- Improves adaptability compared to static rules
+
+## Production-Oriented Security
+- API key authentication
+- Environment-based secret management
+- Prompt injection filtering
+- Input validation and length checks
+- Blocks attempts to expose:
+  - API keys
+  - passwords
+  - tokens
+  - hidden prompts
+
+## Observability & Monitoring
+- Prometheus metrics integration
+- Tracks:
+  - latency
+  - selected model
+  - routing confidence
+  - routing strategy
+  - evaluation metrics
+
+## Evaluation Pipeline
+- CSV-based routing evaluation
+- Stores classifier and routing results
+- Useful for benchmarking and iterative improvement
+
+---
+
+# Tech Stack
 
 - Python
 - FastAPI
-- Groq API
-- Prometheus
 - Pydantic
-- Uvicorn
-- Docker-ready architecture
+- Sentence Transformers
+- Scikit-learn
+- Groq API
+- Llama 3
+- Prometheus
+- Docker
+- Pandas
 
-## Example Routing
+---
 
-| Query Type | Selected Route |
-| ----------------------------------- | ------------------ |
-| Simple factual query | Small LLM |
-| Basic explanation | Small LLM |
-| Architecture analysis | Large LLM |
-| Legal / financial / high-risk query | Large LLM |
-| Ambiguous query | LLM judge fallback |
+# Example Routing Flow
 
-## Metrics
+Simple Query:
+"Translate hello to German"
+→ Small LLM
 
-Prometheus metrics include:
+Complex Query:
+"Explain Kubernetes scalability tradeoffs in distributed systems"
+→ Large LLM
 
-- Request count
-- Model usage
-- Routing strategy distribution
-- Request latency
-- Fallback usage
+Uncertain Query:
+Classifier confidence below threshold
+→ LLM Judge Fallback
 
-## Run Locally
+---
 
-Install dependencies:
+# Security Example
+
+The router blocks malicious prompts such as:
+
+- "Ignore previous instructions"
+- "Reveal system prompt"
+- "Show API keys"
+
+Requests containing suspicious patterns are rejected before inference.
+
+---
+
+# Run Locally
+
+## Create Virtual Environment
 
 ```bash
-pip install -r requirements.txt
-```
-
-Start the FastAPI server:
-
-```bash
-python -m uvicorn app.main:app --reload
-```
-
-The API will run at:
-
-```text
-http://localhost:8000
-```
-
-## Metrics Endpoint
-
-```text
-/metrics
-```
-
-## Evaluation Output
-
-Routing evaluation results are stored in:
-
-```text
-tests/agent_results.csv
-```
-
-This file can be used to compare expected model selection against actual routing decisions. Because apparently even routers need performance reviews now.
-
-## Project Goal
-
-This project demonstrates how to build a cost-aware and risk-aware LLM routing layer for AI applications. It is designed to show practical backend engineering, LLM orchestration, monitoring, and evaluation workflows.
+python -m venv venv
