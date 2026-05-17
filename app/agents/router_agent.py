@@ -1,98 +1,80 @@
+import joblib
+import numpy as np
+from sentence_transformers import SentenceTransformer
+
 from app.services.routing_judge_service import judge_query_complexity
+
+# Load once at startup
+# Do NOT load SentenceTransformer from joblib. That causes transformer version issues.
+_embedder = SentenceTransformer("all-MiniLM-L6-v2")
+_classifier = joblib.load("models/router_classifier.pkl")
+
+RISK_KEYWORDS = [
+    "medical", "medicine", "doctor", "diagnosis", "pregnancy", "symptoms",
+    "legal", "lawyer", "sue", "court", "contract", "landlord",
+    "financial", "investment", "invest", "stock", "crypto", "tax",
+    "compliance", "gdpr", "privacy", "regulation",
+]
+
+CONFIDENCE_THRESHOLD = 0.75
+
+
+def _check_risk(query: str) -> bool:
+    query_lower = query.lower()
+    return any(keyword in query_lower for keyword in RISK_KEYWORDS)
 
 
 class RouterAgent:
     def analyze_query(self, query: str) -> dict:
-        query_lower = query.lower()
-        word_count = len(query.split())
 
-        complexity_score = 0
-        risk_score = 0
-
-        complex_keywords = [
-            "analyze",
-            "compare",
-            "debug",
-            "architecture",
-            "optimize",
-            "strategy",
-            "research",
-            "evaluate",
-            "multi-step",
-            "scalability",
-            "latency",
-            "observability",
-            "kubernetes",
-            "production",
-            "distributed",
-            "tradeoff",
-            "design",
-        ]
-
-        risk_keywords = [
-            "medical",
-            "legal",
-            "financial",
-            "investment",
-            "diagnosis",
-            "contract",
-            "tax",
-            "compliance",
-            "gdpr",
-        ]
-
-        for keyword in complex_keywords:
-            if keyword in query_lower:
-                complexity_score += 2
-
-        for keyword in risk_keywords:
-            if keyword in query_lower:
-                risk_score += 3
-
-        if word_count > 100:
-            complexity_score += 5
-        elif word_count > 60:
-            complexity_score += 3
-        elif word_count > 30:
-            complexity_score += 1
-
-        if risk_score >= 3:
+        if _check_risk(query):
             return {
                 "selected_model": "big_llm",
-                "complexity_score": complexity_score,
-                "risk_score": risk_score,
+                "complexity_score": None,
+                "risk_score": "high",
                 "confidence": 0.95,
                 "routing_strategy": "rule_based_risk_override",
-                "reason": "Selected big LLM because risk-sensitive keywords were detected.",
+                "reason": "Risk-sensitive domain detected. Routed to big LLM for safety.",
             }
 
-        if complexity_score >= 6:
+        embedding = _embedder.encode([query])
+
+        probabilities = _classifier.predict_proba(embedding)[0]
+        classes = _classifier.classes_
+
+        confidence = float(np.max(probabilities))
+        predicted_label = classes[np.argmax(probabilities)]
+
+        if confidence >= CONFIDENCE_THRESHOLD:
+            return {
+                "selected_model": predicted_label,
+                "complexity_score": None,
+                "risk_score": "low",
+                "confidence": round(confidence, 3),
+                "routing_strategy": "embedding_classifier",
+                "reason": f"Embedding classifier routed to {predicted_label} "
+                          f"with {round(confidence * 100, 1)}% confidence.",
+            }
+
+        try:
+            judge_decision = judge_query_complexity(query)
+
+            return {
+                "selected_model": judge_decision["selected_model"],
+                "complexity_score": None,
+                "risk_score": "low",
+                "confidence": judge_decision["confidence"],
+                "routing_strategy": "llm_judge_fallback",
+                "reason": f"Classifier confidence too low ({round(confidence * 100, 1)}%). "
+                          f"LLM judge decided: {judge_decision['reason']}",
+            }
+
+        except Exception as e:
             return {
                 "selected_model": "big_llm",
-                "complexity_score": complexity_score,
-                "risk_score": risk_score,
-                "confidence": 0.90,
-                "routing_strategy": "rule_based_complexity",
-                "reason": "Selected big LLM because complexity score is high.",
+                "complexity_score": None,
+                "risk_score": "unknown",
+                "confidence": 0.5,
+                "routing_strategy": "safe_fallback_big_llm",
+                "reason": f"LLM judge failed. Routed to big LLM for safety. Error: {str(e)}",
             }
-
-        if complexity_score <= 1 and word_count <= 25:
-            return {
-                "selected_model": "small_llm",
-                "complexity_score": complexity_score,
-                "risk_score": risk_score,
-                "confidence": 0.90,
-                "routing_strategy": "rule_based_simple",
-                "reason": "Selected small LLM because query is short and low complexity.",
-            }
-
-        judge_decision = judge_query_complexity(query)
-
-        return {
-            "selected_model": judge_decision["selected_model"],
-            "complexity_score": complexity_score,
-            "risk_score": risk_score,
-            "confidence": judge_decision["confidence"],
-            "routing_strategy": "llm_judge_fallback",
-            "reason": judge_decision["reason"],
-        }

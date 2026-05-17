@@ -1,34 +1,34 @@
 query,selected_model,complexity_score,risk_score,confidence,routing_strategy,reason
-What is Python?,small_llm,0,0,0.9,rule_based_simple,Selected small LLM because query is short and low complexity.
-Explain Docker in simple terms.,small_llm,0,0,0.9,rule_based_simple,Selected small LLM because query is short and low complexity.
-Translate this sentence into German.,small_llm,0,0,0.9,rule_based_simple,Selected small LLM because query is short and low complexity.
-Write a short professional email.,small_llm,0,0,0.9,rule_based_simple,Selected small LLM because query is short and low complexity.
-Summarize this paragraph about AI.,small_llm,0,0,0.9,rule_based_simple,Selected small LLM because query is short and low complexity.
-What does CPU stand for?,small_llm,0,0,0.9,rule_based_simple,Selected small LLM because query is short and low complexity.
-Explain REST APIs briefly.,small_llm,0,0,0.9,rule_based_simple,Selected small LLM because query is short and low complexity.
-Write a LinkedIn headline for a Data Scientist.,small_llm,0,0,0.9,rule_based_simple,Selected small LLM because query is short and low complexity.
-How does Git work?,small_llm,0,0,0.9,rule_based_simple,Selected small LLM because query is short and low complexity.
-What is Kubernetes?,small_llm,2,0,1.0,llm_judge_fallback,"The query is short and factual, requiring a simple explanation."
-Explain how caching improves backend performance.,small_llm,0,0,0.9,rule_based_simple,Selected small LLM because query is short and low complexity.
-Compare Redis and Memcached.,small_llm,2,0,0.9,llm_judge_fallback,"The query is a simple comparison between two caching systems, which can be answered with a factual and straightforward response."
-How does load balancing work in cloud systems?,small_llm,0,0,0.9,rule_based_simple,Selected small LLM because query is short and low complexity.
-Explain observability in distributed systems.,big_llm,4,0,0.8,llm_judge_fallback,The query requires complex reasoning and multi-step analysis to explain observability in distributed systems.
-When should a company use microservices instead of a monolith?,small_llm,0,0,0.9,rule_based_simple,Selected small LLM because query is short and low complexity.
-Analyze Kubernetes latency issues in a distributed microservice architecture.,big_llm,10,0,0.9,rule_based_complexity,Selected big LLM because complexity score is high.
-Design a scalable event-driven architecture for real-time analytics.,big_llm,4,0,0.9,llm_judge_fallback,"The query requires complex reasoning and multi-step analysis for designing a scalable event-driven architecture, which is beyond the capabilities of small_llm."
-Debug random timeout spikes in a FastAPI production deployment.,big_llm,4,0,0.9,llm_judge_fallback,"The query requires complex reasoning and debugging, which is beyond the capabilities of small_llm."
-Compare transformer and CNN architectures for computer vision workloads.,big_llm,4,0,0.9,llm_judge_fallback,Complex comparison of architectures requires multi-step analysis and reasoning.
-Optimize GPU utilization for large-scale AI model inference.,big_llm,2,0,0.9,llm_judge_fallback,The query requires complex reasoning and multi-step analysis to optimize GPU utilization for large-scale AI model inference.
-Analyze the legal risks of training AI systems using customer data in Europe.,big_llm,2,3,0.95,rule_based_risk_override,Selected big LLM because risk-sensitive keywords were detected.
-Evaluate GDPR compliance risks in AI recommendation systems.,big_llm,2,6,0.95,rule_based_risk_override,Selected big LLM because risk-sensitive keywords were detected.
-Analyze financial risks of investing in volatile AI startups.,big_llm,2,3,0.95,rule_based_risk_override,Selected big LLM because risk-sensitive keywords were detected.
-Design a secure healthcare AI platform handling sensitive patient records.,big_llm,2,0,0.9,llm_judge_fallback,"The query requires complex reasoning and analysis of sensitive patient records, which involves legal and financial risks, making it a high-risk task for big_llm."
-Create a migration strategy from monolith architecture to Kubernetes microservices.,big_llm,6,0,0.9,rule_based_complexity,Selected big LLM because complexity score is high.
-Evaluate tradeoffs between PostgreSQL and MongoDB for high-scale analytics.,big_llm,4,0,0.9,llm_judge_fallback,"The query requires complex reasoning and multi-step analysis to evaluate tradeoffs between different database systems, which is beyond the capabilities of small_llm."
-Design a monitoring strategy using Prometheus and Grafana for AI inference systems.,big_llm,4,0,0.9,llm_judge_fallback,"The query requires a complex monitoring strategy involving multiple components (Prometheus and Grafana) and a specific domain (AI inference systems), which is beyond the capabilities of a small LLM."
-Analyze cost optimization strategies for multi-model LLM deployments.,big_llm,2,0,0.9,llm_judge_fallback,The query requires complex reasoning and multi-step analysis for cost optimization strategies in multi-model LLM deployments.
-Hi,small_llm,0,0,0.9,rule_based_simple,Selected small LLM because query is short and low complexity.
-Explain quantum computing like I am five.,small_llm,0,0,0.9,rule_based_simple,Selected small LLM because query is short and low complexity.
-Should startups prioritize scalability early?,big_llm,2,0,0.8,llm_judge_fallback,"The query requires complex reasoning and multi-step analysis to provide a comprehensive answer, considering various factors such as growth rate, resource allocation, and potential risks."
-Fix latency issue.,big_llm,2,0,0.8,llm_judge_fallback,"Potential latency issue requires analysis and debugging, which is a complex task."
-Medical diagnosis for chest pain and fever symptoms.,big_llm,0,6,0.95,rule_based_risk_override,Selected big LLM because risk-sensitive keywords were detected.
+What is Python?,small_llm,,low,1.0,llm_judge_fallback,"Classifier confidence too low (69.4%). LLM judge decided: The query is short and factual, requiring a simple explanation."
+Explain Docker in simple terms.,small_llm,,low,1.0,llm_judge_fallback,Classifier confidence too low (60.9%). LLM judge decided: The query requires a simple explanation of a factual topic.
+Translate this sentence into German.,small_llm,,low,1.0,llm_judge_fallback,"Classifier confidence too low (67.0%). LLM judge decided: Translation is a simple, low-risk task that can be handled by a small LLM."
+Write a short professional email.,small_llm,,low,1.0,llm_judge_fallback,Classifier confidence too low (64.1%). LLM judge decided: Simple factual request with a clear outcome
+Summarize this paragraph about AI.,small_llm,,low,0.9,llm_judge_fallback,"Classifier confidence too low (58.5%). LLM judge decided: The query requires a simple summary, which is a basic explanation task."
+What does CPU stand for?,small_llm,,low,1.0,llm_judge_fallback,Classifier confidence too low (67.5%). LLM judge decided: Simple factual question
+Explain REST APIs briefly.,small_llm,,low,1.0,llm_judge_fallback,"Classifier confidence too low (63.8%). LLM judge decided: The query is short, factual, and requires a basic explanation."
+Write a LinkedIn headline for a Data Scientist.,small_llm,,low,0.9,llm_judge_fallback,"Classifier confidence too low (64.3%). LLM judge decided: The query requires a simple, factual response with basic explanation."
+How does Git work?,small_llm,,low,0.9,llm_judge_fallback,"Classifier confidence too low (57.2%). LLM judge decided: The query is short and factual, requiring a basic explanation of Git's functionality."
+What is Kubernetes?,small_llm,,low,1.0,llm_judge_fallback,"Classifier confidence too low (52.8%). LLM judge decided: The query is short and factual, requiring a simple explanation."
+Explain how caching improves backend performance.,small_llm,,low,0.9,llm_judge_fallback,"Classifier confidence too low (52.1%). LLM judge decided: The query is short, factual, and requires a basic explanation."
+Compare Redis and Memcached.,small_llm,,low,0.9,llm_judge_fallback,"Classifier confidence too low (65.7%). LLM judge decided: The query is a simple comparison between two caching systems, which can be answered with a factual and straightforward response."
+How does load balancing work in cloud systems?,big_llm,,low,0.8,llm_judge_fallback,Classifier confidence too low (54.8%). LLM judge decided: The query requires complex reasoning and multi-step analysis to explain load balancing in cloud systems.
+Explain observability in distributed systems.,big_llm,,low,0.8,llm_judge_fallback,Classifier confidence too low (58.2%). LLM judge decided: The query requires complex reasoning and multi-step analysis to explain observability in distributed systems.
+When should a company use microservices instead of a monolith?,big_llm,,low,0.9,llm_judge_fallback,Classifier confidence too low (65.2%). LLM judge decided: The query requires complex reasoning and multi-step analysis to determine when a company should use microservices instead of a monolith.
+Analyze Kubernetes latency issues in a distributed microservice architecture.,big_llm,,high,0.95,rule_based_risk_override,Risk-sensitive domain detected. Routed to big LLM for safety.
+Design a scalable event-driven architecture for real-time analytics.,big_llm,,low,0.9,llm_judge_fallback,"Classifier confidence too low (69.1%). LLM judge decided: The query requires complex reasoning and multi-step analysis for designing a scalable event-driven architecture, which is beyond the capabilities of small_llm."
+Debug random timeout spikes in a FastAPI production deployment.,big_llm,,low,0.9,llm_judge_fallback,"Classifier confidence too low (68.1%). LLM judge decided: The query requires complex reasoning and debugging, which is beyond the capabilities of small_llm."
+Compare transformer and CNN architectures for computer vision workloads.,big_llm,,low,0.9,llm_judge_fallback,Classifier confidence too low (60.2%). LLM judge decided: Complex comparison of architectures requires multi-step analysis and reasoning.
+Optimize GPU utilization for large-scale AI model inference.,big_llm,,low,0.9,llm_judge_fallback,Classifier confidence too low (67.7%). LLM judge decided: The query requires complex reasoning and multi-step analysis to optimize GPU utilization for large-scale AI model inference.
+Analyze the legal risks of training AI systems using customer data in Europe.,big_llm,,high,0.95,rule_based_risk_override,Risk-sensitive domain detected. Routed to big LLM for safety.
+Evaluate GDPR compliance risks in AI recommendation systems.,big_llm,,high,0.95,rule_based_risk_override,Risk-sensitive domain detected. Routed to big LLM for safety.
+Analyze financial risks of investing in volatile AI startups.,big_llm,,high,0.95,rule_based_risk_override,Risk-sensitive domain detected. Routed to big LLM for safety.
+Design a secure healthcare AI platform handling sensitive patient records.,big_llm,,low,0.9,llm_judge_fallback,"Classifier confidence too low (58.4%). LLM judge decided: The query requires complex reasoning and analysis of sensitive patient records, which involves legal and financial risks, making it a high-risk task for big_llm."
+Create a migration strategy from monolith architecture to Kubernetes microservices.,big_llm,,low,0.9,llm_judge_fallback,Classifier confidence too low (67.0%). LLM judge decided: Complex reasoning and multi-step analysis required for migration strategy
+Evaluate tradeoffs between PostgreSQL and MongoDB for high-scale analytics.,big_llm,,low,0.9,llm_judge_fallback,"Classifier confidence too low (67.1%). LLM judge decided: The query requires complex reasoning and multi-step analysis to evaluate tradeoffs between different database systems, which is beyond the capabilities of small_llm."
+Design a monitoring strategy using Prometheus and Grafana for AI inference systems.,big_llm,,low,0.9,llm_judge_fallback,"Classifier confidence too low (63.9%). LLM judge decided: The query requires a complex monitoring strategy involving multiple components (Prometheus and Grafana) and a specific domain (AI inference systems), which is beyond the capabilities of a small LLM."
+Analyze cost optimization strategies for multi-model LLM deployments.,big_llm,,low,0.9,llm_judge_fallback,Classifier confidence too low (70.5%). LLM judge decided: The query requires complex reasoning and multi-step analysis for cost optimization strategies in multi-model LLM deployments.
+Hi,small_llm,,low,1.0,llm_judge_fallback,Classifier confidence too low (59.1%). LLM judge decided: query is short and factual
+Explain quantum computing like I am five.,small_llm,,low,0.9,llm_judge_fallback,Classifier confidence too low (65.3%). LLM judge decided: Simple explanation of a basic concept
+Should startups prioritize scalability early?,big_llm,,low,0.8,llm_judge_fallback,"Classifier confidence too low (72.5%). LLM judge decided: The query requires complex reasoning and multi-step analysis to provide a comprehensive answer, considering various factors such as growth rate, resource allocation, and potential risks."
+Fix latency issue.,big_llm,,high,0.95,rule_based_risk_override,Risk-sensitive domain detected. Routed to big LLM for safety.
+Medical diagnosis for chest pain and fever symptoms.,big_llm,,high,0.95,rule_based_risk_override,Risk-sensitive domain detected. Routed to big LLM for safety.

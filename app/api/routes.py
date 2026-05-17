@@ -12,10 +12,12 @@ router_agent = RouterAgent()
 
 @router.post(
     "/route",
-    response_model=QueryResponse,
-    dependencies=[Depends(verify_api_key)]
+    response_model=QueryResponse
 )
-def route_query(request: QueryRequest):
+def route_query(
+    request: QueryRequest,
+    _: bool = Depends(verify_api_key)
+):
     validate_query_input(request.query)
 
     decision = router_agent.analyze_query(request.query)
