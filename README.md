@@ -33,6 +33,7 @@ The router selects:
 - LLM Judge → fallback for uncertain routing decisions
 
 ---
+<img width="1536" height="1024" alt="Architecture 2" src="https://github.com/user-attachments/assets/27dfd5ad-a9ee-4b2a-bcbd-e2d89d733f4a" />
 
 # Key Features
 
